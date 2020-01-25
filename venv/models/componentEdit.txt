@@ -1,0 +1,87 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { PersonelService } from '../../../../shared/service/PersonelService';
+import { classNameService } from '../../../../shared/service/classNameService';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { Router, ActivatedRoute } from '@angular/router';
+import { className} from '../../../../shared/domain/className';
+import { Parameter } from '@libs/fw/src';
+import { MyHelperService } from '../../../../shared/utility/MyHelperService';
+import { ParameterService } from '../../../../shared/utility/ParameterService';
+
+@Component({
+  selector: 'abt-projects-serverPath-edit',
+  templateUrl: './serverPath-edit.component.html',
+  styleUrls: ['./serverPath-edit.component.css']
+})
+export class classNameEditComponent implements OnInit {
+
+  constructor(private personelService: PersonelService,
+    private service:classNameService,
+    private confirMationService:ConfirmationService,
+    private ms:MessageService,
+    private router:Router,
+    private route:ActivatedRoute,
+    private changeDetectorRefs: ChangeDetectorRef,
+    private myHelperService:MyHelperService,
+    public parameterService: ParameterService
+    )
+  { }
+  objectName: className = new className();
+  cparameters: any = [];
+  id:number;
+  parametreListesi: Parameter[];
+  ngOnInit() {
+    this.route.params.subscribe(params=>{
+      this.id = params["id"];
+    });
+    if(this.id){
+      this.findById(this.id);
+    }
+    this.cparameters.push("0");
+    this.cparameters.push("2");
+  }
+
+  save() {
+    this.service.save(this.objectName).subscribe((result)=>
+    {
+      this.showSuccess('BAŞARILI',"İşlem Başarılı..");
+      this.gotoList();
+    },(error)=>{this.showError('HATA','Bir Hata Oluştu..')}      )
+  }
+
+  findById(id:number){
+    this.service.getById(id).subscribe((result)=>{
+      this.objectName = result;
+    },(error) =>{this.showError('HATA','Sunucu Hatası..')})
+  }
+
+
+  gotoList(){
+    this.router.navigate(['/personel/serverPath-list/'])
+  }
+
+
+  delete(id:number) {
+    this.confirMationService.confirm({
+      message: 'Silmek istediğinize emin misiniz?',
+      accept : ()=>{
+        this.service.delete(id).subscribe(accept => {
+          this.showSuccess("BAŞARILI","Kayıt Silindi..");
+           this.router.navigate(['personel/serverPath-list']);
+        },error=>{
+            this.showError("HATA","Kayıt Silinemedi..")
+        });
+      }
+    })
+ 
+  }
+
+  showError(baslik: string, hata: string) {
+    this.ms.add({severity: 'error', summary: baslik, detail: hata});
+    this.changeDetectorRefs.detectChanges();
+  }
+  showSuccess(baslik: string, mesaj: string) {
+    this.ms.add({severity: 'success', summary: baslik, detail: mesaj});
+   this.changeDetectorRefs.detectChanges();
+  }
+}

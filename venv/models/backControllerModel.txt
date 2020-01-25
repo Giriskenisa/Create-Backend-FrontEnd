@@ -1,0 +1,97 @@
+package com.abt.controller;
+
+
+import com.abt.customQuery.PersonelDaoCustom;
+import com.abt.entitiy.className;
+import com.abt.personel.repostory.classNameDao;
+import com.abt.utility.Filter;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/serverpath")
+public class classNameController {
+
+    @Autowired
+    classNameDao objectNameDao;
+
+    PersonelDaoCustom personelDaoCustom;
+
+    @PostMapping("/")
+    ResponseEntity<Object> save(@Valid @RequestBody className objectName, BindingResult result) {
+        if(result.hasErrors()){
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }else{
+
+
+            try{
+                objectNameDao.save(objectName);
+            }catch (Exception e){
+                return new ResponseEntity<> (HttpStatus.GATEWAY_TIMEOUT);
+            }
+
+            return new ResponseEntity<> (HttpStatus.CREATED);
+        }
+    }
+
+
+
+    @PutMapping("/{id}")
+    ResponseEntity<Object> update(@RequestBody className newclassName, BindingResult result, @PathVariable("id") Long id){
+
+        if(result.hasErrors()){
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }else{
+            className objectName  = objectNameDao.findById(id).get();
+            BeanUtils.copyProperties(newclassName,objectName);
+            objectNameDao.save(objectName);
+            return  ResponseEntity.ok(HttpStatus.OK);
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id) throws Exception{
+        objectNameDao.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+//filtre
+
+    @GetMapping
+    public ResponseEntity<List<Map<String,String >>> getList(@RequestParam Map<String,String> params) throws ParseException {
+        Filter filter  = new Filter(params);
+
+        return ResponseEntity.ok(objectNameDao.objectNameList(
+                filtreEklenecek
+        ));
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity <className> get(@PathVariable("id") Long id){
+
+        className objectName  =  objectNameDao.findById(id).get();
+
+        return ResponseEntity.ok(objectName);
+    }
+
+
+}

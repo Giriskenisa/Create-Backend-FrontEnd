@@ -1,0 +1,68 @@
+<kt-portlet>
+  <p-confirmDialog header="Uyarı!" icon="pi pi-exclamation-triangle" appendTo="body" acceptLabel="Evet"
+    rejectLabel="Hayır"></p-confirmDialog>
+  <kt-portlet-header title="className Listesi"  [class]="'kt-portlet__head--lg'">
+  <ng-container ktPortletTools>
+    <a [routerLink]="['/personel/serverPath-edit']" style="margin-left: 75%;" class="btn btn-secondary m-btn m-btn--icon">
+                  <span>
+                    <i class="la la-plus-circle"></i>
+                    <span>{{ 'BUTTONS.ADDNEW' | translate }}</span>
+                  </span>
+    </a>
+  </ng-container>
+  </kt-portlet-header>
+  
+    <kt-portlet-body>
+      <form id="searchUserForm">
+        <div class="form-group m-form__group row">
+               <div class="col-lg-6">
+                  eklenecek1
+
+                </div>
+             <div class = "col-lg-6"><!--  col-lg-6-->
+                  eklenecek2
+              </div>
+        <br>
+        <br>
+          <div class="col-md-12 text-center">
+            <button id="btnClear" (click)="clear()" class="btn btn-info">
+              <i class="fa fa-times"></i>
+              {{ 'BUTTONS.CLEAN' | translate }}
+            </button>&nbsp;
+            <button (click)="getobjectNameList()" class="btn btn-success">
+              <i class="fa fa-search"></i>
+              {{ 'BUTTONS.SEARCH' | translate }}
+            </button>&nbsp;
+          </div>
+        </div>
+      </form>
+     
+      <p-table [value]="objectNameList" [scrollable]="true" [paginator]="true"  [rows]="10" >
+        <ng-template pTemplate="header">
+        <tr>
+          labelEklenecek
+          <th scope="col"></th>
+        </tr>
+        </ng-template>
+        <ng-template  pTemplate="body" let-dto >
+        <tr (dblclick)="RowDblClick(dto.id)" >
+            alaneklenecek
+          <ng-template #void>
+            <td></td>
+          </ng-template>
+          <td class="text-center">
+              <a [routerLink]="['/personel/serverPath/', dto.id]"
+                 class="btn btn-success btn-sm btn-circle btn-icon"><i class="fa fa-pencil-alt"></i></a>&nbsp;
+              <button (click)="delete(dto.id)" class="btn btn-danger btn-sm btn-circle btn-icon"><i
+                class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+        </ng-template>
+      </p-table>
+  
+    </kt-portlet-body>
+  
+  
+  
+  </kt-portlet>
+  

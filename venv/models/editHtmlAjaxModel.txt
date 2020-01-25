@@ -1,0 +1,15 @@
+<div class="row">
+      <label class="col-lg-2">labelName</label>
+                  <ui-autocomplete class="col-lg-5" [hint]="''" [minLenght]=2
+                [tableName]="'tableName1'"
+                [textField]="''"
+                [valueField]="'ID'"
+                [whereSql]="''"
+                [isCustom]='1'
+                [moduleName]="'personel'"
+                [methodName]="'ajaxGeneric'"
+                 [customNgModel]="camelTable.objectName"
+                 (notify)="camelTable.objectName = $event.id"
+              ></ui-autocomplete>
+    </div>
+

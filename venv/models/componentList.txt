@@ -1,0 +1,95 @@
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Filter } from '../../../../shared/utility/Filter';
+import { classNameService } from '../../../../shared/service/classNameService';
+import { Router } from '@angular/router';
+import { PersonelService } from '../../../../shared/service/PersonelService';
+import { Parameter } from '@libs/fw/src';
+import { ConfirmationService, DialogService, MenuItem, MessageService, SelectItem } from "primeng/api";
+import { ParameterService } from '../../../../shared/utility/ParameterService';
+
+
+@Component({
+  selector: 'abt-projects-serverPath-list',
+  templateUrl: './serverPath-list.component.html',
+  styleUrls: ['./serverPath-list.component.css'],
+  providers: [ConfirmationService]
+})
+export class classNameListComponent implements OnInit {
+
+
+  constructor(  private service: classNameService,
+       private ms:MessageService,
+       private router:Router,
+       private personelService:PersonelService,
+       private changeDetectorRefs: ChangeDetectorRef,
+       private confirmationService:ConfirmationService,
+       public parameterService: ParameterService
+    ) {
+  }
+
+  filter:Filter;
+  objectNameList:any[];
+  cparameters:any=[];
+
+  ngOnInit() {
+    this.filter = new Filter("serverPath-list", {
+    });
+
+    this.cparameters.push("0");
+    this.cparameters.push("2");
+    this.getobjectNameList();
+  }
+
+  getobjectNameList(){
+    this.service.getList(this.filter.getServiceString()).subscribe((result)=>{
+      this.objectNameList = result;
+      this.changeDetectorRefs.detectChanges();
+    },(error)=>{
+      this.showError('Hata','Veriler Yüklenirken Hata Oluştu..');
+    });
+  }
+
+gotoList(){
+  this.getobjectNameList();
+}
+
+showError(baslik: string, hata: string) {
+  this.ms.add({severity: 'error', summary: baslik, detail: hata});
+ this.changeDetectorRefs.detectChanges();
+}
+showSuccess(baslik: string, mesaj: string) {
+  this.ms.add({severity: 'success', summary: baslik, detail: mesaj});
+ this.changeDetectorRefs.detectChanges();
+}
+
+
+RowDblClick(id:number){
+  this.router.navigate(['/personel/serverPath-edit/' + id]);
+}
+
+clear(){
+ this.filter.clear();
+ this.getobjectNameList();
+}
+
+
+  delete(id:number) {
+    this.confirmationService.confirm({
+      message: 'Silmek istediğinize emin misiniz?',
+      accept : ()=>{
+        this.service.delete(id).subscribe(accept => {           
+          // this.router.navigate(['personel/nufus-list']);
+           this.clear();
+          this.showSuccess("BAŞARILI","Kayıt Silindi..");
+           this.changeDetectorRefs.detectChanges();
+        },error=>{
+            this.showError("HATA","Kayıt Silinemedi..")
+        });
+      }
+    })
+ 
+  }
+
+
+
+}

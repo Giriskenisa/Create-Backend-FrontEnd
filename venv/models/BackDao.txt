@@ -1,0 +1,29 @@
+package com.abt.personel.repostory;
+import com.abt.entitiy.className;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface classNameDao extends JpaRepository<className,Long> {
+
+    @Query(value =
+                "select  e.id as id, " +
+                        "CONCAT(s.ad , ' ', s.soyad) as personel," +
+                        "s.aktif as aktif," +
+                        "e.engelGrubu as engelGrubu," +
+                        "e.engelSinifi as engelSinifi," +
+                        "e.ozurOrani as ozurOrani," +
+                        "e.raporTarihi as raporTarihi," +
+                        "e.raporVerenKurum as raporVerenKurum" +
+                        " from PerEngel e left join PerSicil s ON e.personelId = s.id " +
+                         "where(:personelId is null or e.personelId = :personelId) " +
+                        "and(:personelTipi is null or s.personelTipi = :personelTipi ) "+
+                        "and(:aktif is null or s.aktif = :aktif ) " +
+                        "and(:engelGrubu is null or e.engelGrubu = :engelGrubu) "+
+                        "and(:gorevBirimId is null or  s.gorevBirimId = :gorevBirimId)" +
+                        "and(:gorevUnvanId is null or s.gorevUnvanId = :gorevUnvanId)" +
+                        "and( :engelSinifi is null or e.engelSinifi = :engelSinifi)"
+    )
+    List<Map<String,String>> getList(
+            parametre
+
+    );
+
+}

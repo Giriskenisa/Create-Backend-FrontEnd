@@ -1,0 +1,31 @@
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { className } from '../domain/className';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class classNameService {
+
+  constructor(@Inject('serverUrl') private serverUrl: string, private http: HttpClient) {}
+
+  public save(objectName: className): Observable<any> {
+    return objectName.id
+      ? this.http.put<className>(this.serverUrl + "/serverPath/" + objectName.id, objectName)
+      : this.http.post<className>(this.serverUrl + "/serverPath/", objectName);
+  }
+
+  public getList(params:String): Observable<any[]> {
+    return this.http.get<any[]>(this.serverUrl + "/serverPath/"+params);
+  }
+
+  public getById(id: Number): Observable<className> {
+    return this.http.get<className>(this.serverUrl + "/serverPath/" + id);
+  }
+
+  public delete(id: Number): Observable<HttpResponse<any>> {
+    return this.http.delete<any>(this.serverUrl + "/serverPath/" + id);
+  }
+
+}

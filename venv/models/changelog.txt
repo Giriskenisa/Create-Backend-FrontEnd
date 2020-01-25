@@ -1,0 +1,37 @@
+   <changeSet author="isagirisken" id="tableName1_CREATE">
+        <createTable tableName="tableName1">
+            <column autoIncrement="true"  name="ID" type="NUMBER(38, 0)">
+                <constraints primaryKey="true" primaryKeyName="PK_tableName1"/>
+            </column>
+
+
+          eklenecek
+
+
+             <column type="NUMBER" name="created_by"/>
+
+            <column type="DATE" name="created_date"/>
+
+            <column type="NUMBER" name="last_modified_by"/>
+
+            <column type="DATE" name="last_modified_date"/>
+        </createTable>
+
+       <createTable tableName="tableName1_AUD">
+            <column  name="ID" type="NUMBER(38, 0)">
+            </column>
+
+             eklenecek
+
+            <column name="rev" type="NUMBER" />
+            <column name="revtype" type="NUMBER(3)" />
+        </createTable>
+        <addPrimaryKey columnNames="id,REV"
+                       constraintName="PK_tableName2" tableName="tableName1_AUD" />
+        <addForeignKeyConstraint baseColumnNames="REV"
+                                 baseTableName="tableName1_AUD"
+                                 constraintName="FK_tableName1_AUD" deferrable="true"
+                                 initiallyDeferred="true" onDelete="RESTRICT" onUpdate="RESTRICT"
+                                 referencedColumnNames="REV" referencedTableName="REVINFO" />
+
+    </changeSet>

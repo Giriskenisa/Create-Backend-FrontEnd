@@ -1,0 +1,49 @@
+<kt-portlet>
+    <p-confirmDialog header="Uyarı!" icon="pi pi-exclamation-triangle" appendTo="body" acceptLabel="Evet"
+    rejectLabel="Hayır"></p-confirmDialog>
+    <kt-portlet-header title="className Bilgileri" [class]="'kt-portlet__head--lg'">
+      <ng-container ktPortletTools>
+        <a [routerLink]="['/personel/serverPath-list']" class="btn btn-secondary m-btn m-btn--icon" style="margin-left:50%">
+                  <span>
+                    <i class="la la-list"></i>
+                    <span translate>Tüm Kayıtlar</span>
+                  </span>
+        </a>
+      </ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body>
+      <!--begin::Form-->
+  
+      <form class="m-form m-form--fit m-form--label-align-right m-form--group-seperator-dashed">
+        <div class="m-portlet__body">
+          <div class="form-group m-form__group">
+            <div class="row">
+             <div class="col-lg-6">
+               eklenecek
+             </div>
+                  <div class="col-lg-6">
+                    
+                  
+                  </div>
+                  
+            </div>
+          </div>
+        </div>
+    
+        <div class="m-portlet__foot m-portlet__foot--fit">
+          <div class="m-form__actions m-form__actions"><br/>
+            <div class="row">
+              <br/>
+              <div class="col-lg-3">
+                <button type="submit" class="btn btn-primary" (click)="save()" translate="BUTTONS.SAVE">Kaydet</button>&nbsp;
+                <button *ngIf="objectName.id" class="btn btn-danger" (click)="delete(objectName.id)" translate="BUTTONS.DELETE">Sil</button>&nbsp;
+                <button class="btn btn-secondary" (click)="gotoList()">Vazgeç</button>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </form>
+    </kt-portlet-body>
+  </kt-portlet>
+  
