@@ -30,7 +30,8 @@ import lombok.NoArgsConstructor;
 public class className extends Auditable<Long> {
 
     @Id
-    @GeneratedValue(strategy=strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "SEQ_tableName", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "SEQ_tableName", sequenceName = "SEQ_tableName", allocationSize = 1)
     eklenecek
 
 }

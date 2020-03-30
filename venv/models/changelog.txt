@@ -1,4 +1,14 @@
    <changeSet author="isagirisken" id="tableName1_CREATE">
+
+    <changeSet id="tableName1_SEQ" author="isagirisken" dbms="oracle,postgresql,h2" onValidationFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="SEQ_tableName1"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="SEQ_tableName1" minValue="0" maxValue="9223372036854775807" startValue="1" incrementBy="1" cycle="false"/>
+    </changeSet>
+
         <createTable tableName="tableName1">
             <column autoIncrement="true"  name="ID" type="NUMBER(38, 0)">
                 <constraints primaryKey="true" primaryKeyName="PK_tableName1"/>

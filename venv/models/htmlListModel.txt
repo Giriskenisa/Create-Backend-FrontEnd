@@ -1,9 +1,10 @@
+<abt-projects-spinner-all></abt-projects-spinner-all>
 <kt-portlet>
   <p-confirmDialog header="Uyarı!" icon="pi pi-exclamation-triangle" appendTo="body" acceptLabel="Evet"
     rejectLabel="Hayır"></p-confirmDialog>
   <kt-portlet-header title="className Listesi"  [class]="'kt-portlet__head--lg'">
   <ng-container ktPortletTools>
-    <a [routerLink]="['/personel/serverPath-edit']" style="margin-left: 75%;" class="btn btn-secondary m-btn m-btn--icon">
+    <a [routerLink]="['/personel/serverPath-edit']" class="btn btn-secondary m-btn m-btn--icon">
                   <span>
                     <i class="la la-plus-circle"></i>
                     <span>{{ 'BUTTONS.ADDNEW' | translate }}</span>
@@ -51,12 +52,37 @@
             <td></td>
           </ng-template>
           <td class="text-center">
-              <a [routerLink]="['/personel/serverPath/', dto.id]"
+              <a [routerLink]="['/personel/serverPath-edit/', dto.id]"
                  class="btn btn-success btn-sm btn-circle btn-icon"><i class="fa fa-pencil-alt"></i></a>&nbsp;
               <button (click)="delete(dto.id)" class="btn btn-danger btn-sm btn-circle btn-icon"><i
                 class="fa fa-trash"></i></button>
             </td>
         </tr>
+        </ng-template>
+     <ng-template pTemplate="summary">
+          <div class="row">
+            <div style="text-align:left" class="col-lg-2">
+              <button type="button" pButton icon="pi pi-refresh" title="Yenile" (click)="getobjectNameList()"></button>
+            </div>
+            <div class="col-lg-1">
+
+            </div>
+            <div class="col-lg-5">
+                Toplam Kayıt Sayısı: {{objectNameList ? objectNameList.length : ""}}
+            </div>
+            <div *ngIf="objectNameList && objectNameList.length > 0" class="ui-helper-clearfix col-lg-4 overflow">
+              <button type="button"  iconPos="left"
+                (click)="export('excel')" style="margin-right: 0.5em;margin-left:35%" class="btn btn-success btn-sm"><i class="fa fa-file-excel"></i>EXCEL</button>
+    
+                <button type="button" icon="pi pi-file" iconPos="left"  (click)="export('csv')"
+                style="margin-right: 0.5em;" class="btn btn-success btn-sm"><i class="fa fa-file-excel"></i>CSV</button>
+    
+              <button type="button"  (click)="export('')"
+                style="margin-right: 0.5em;"class="btn btn-warning btn-sm"><i class="fa fa-file-pdf"></i>PDF</button>
+    
+              <button type="button" class="btn btn-info btn-sm" (click)="export('docx')"><i class="fa fa-file-word"></i>WORD</button>
+            </div>
+            </div>
         </ng-template>
       </p-table>
   

@@ -7,6 +7,7 @@ import { className} from '../../../../shared/domain/className';
 import { Parameter } from '@libs/fw/src';
 import { MyHelperService } from '../../../../shared/utility/MyHelperService';
 import { ParameterService } from '../../../../shared/utility/ParameterService';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'abt-projects-serverPath-edit',
@@ -21,9 +22,10 @@ export class classNameEditComponent implements OnInit {
     private ms:MessageService,
     private router:Router,
     private route:ActivatedRoute,
-    private changeDetectorRefs: ChangeDetectorRef,
-    private myHelperService:MyHelperService,
-    public parameterService: ParameterService
+    private cdf: ChangeDetectorRef,
+    private help:MyHelperService,
+    public parameterService: ParameterService,
+    private spinner:NgxSpinnerService
     )
   { }
   objectName: className = new className();
@@ -42,17 +44,21 @@ export class classNameEditComponent implements OnInit {
   }
 
   save() {
+  this.spinner.show();
     this.service.save(this.objectName).subscribe((result)=>
     {
       this.showSuccess('BAŞARILI',"İşlem Başarılı..");
       this.gotoList();
-    },(error)=>{this.showError('HATA','Bir Hata Oluştu..')}      )
+    },(error)=>{this.help.showError(error)}      )
   }
 
   findById(id:number){
+  this.spinner.show();
     this.service.getById(id).subscribe((result)=>{
       this.objectName = result;
-    },(error) =>{this.showError('HATA','Sunucu Hatası..')})
+      this.cdf.detectChanges();
+      this.spinner.hide();
+    },(error) =>{this.help.showError(error)})
   }
 
 
@@ -65,23 +71,19 @@ export class classNameEditComponent implements OnInit {
     this.confirMationService.confirm({
       message: 'Silmek istediğinize emin misiniz?',
       accept : ()=>{
+      this.spinner.show();
         this.service.delete(id).subscribe(accept => {
           this.showSuccess("BAŞARILI","Kayıt Silindi..");
            this.router.navigate(['personel/serverPath-list']);
         },error=>{
-            this.showError("HATA","Kayıt Silinemedi..")
+            this.help.showError(error)
         });
       }
     })
  
   }
 
-  showError(baslik: string, hata: string) {
-    this.ms.add({severity: 'error', summary: baslik, detail: hata});
-    this.changeDetectorRefs.detectChanges();
-  }
   showSuccess(baslik: string, mesaj: string) {
-    this.ms.add({severity: 'success', summary: baslik, detail: mesaj});
-   this.changeDetectorRefs.detectChanges();
+   this.help.showToast('success',baslik,mesaj);
   }
 }

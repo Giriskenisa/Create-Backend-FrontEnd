@@ -1,9 +1,11 @@
+
+<abt-projects-spinner-all></abt-projects-spinner-all>
 <kt-portlet>
     <p-confirmDialog header="Uyarı!" icon="pi pi-exclamation-triangle" appendTo="body" acceptLabel="Evet"
     rejectLabel="Hayır"></p-confirmDialog>
     <kt-portlet-header title="className Bilgileri" [class]="'kt-portlet__head--lg'">
       <ng-container ktPortletTools>
-        <a [routerLink]="['/personel/serverPath-list']" class="btn btn-secondary m-btn m-btn--icon" style="margin-left:50%">
+        <a [routerLink]="['/personel/serverPath-list']" class="btn btn-secondary m-btn m-btn--icon">
                   <span>
                     <i class="la la-list"></i>
                     <span translate>Tüm Kayıtlar</span>

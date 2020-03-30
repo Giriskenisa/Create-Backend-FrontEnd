@@ -6,13 +6,13 @@ import { PersonelService } from '../../../../shared/service/PersonelService';
 import { Parameter } from '@libs/fw/src';
 import { ConfirmationService, DialogService, MenuItem, MessageService, SelectItem } from "primeng/api";
 import { ParameterService } from '../../../../shared/utility/ParameterService';
-
+import {NgxSpinnerService} from 'ngx-spinner';
+import { MyHelperService } from '../../../../shared/utility/MyHelperService';
 
 @Component({
   selector: 'abt-projects-serverPath-list',
   templateUrl: './serverPath-list.component.html',
-  styleUrls: ['./serverPath-list.component.css'],
-  providers: [ConfirmationService]
+  styleUrls: ['./serverPath-list.component.css']
 })
 export class classNameListComponent implements OnInit {
 
@@ -21,9 +21,11 @@ export class classNameListComponent implements OnInit {
        private ms:MessageService,
        private router:Router,
        private personelService:PersonelService,
-       private changeDetectorRefs: ChangeDetectorRef,
+       private cdf: ChangeDetectorRef,
        private confirmationService:ConfirmationService,
-       public parameterService: ParameterService
+       public parameterService: ParameterService,
+       private help:MyHelperService,
+       private spinner:NgxSpinnerService
     ) {
   }
 
@@ -33,6 +35,7 @@ export class classNameListComponent implements OnInit {
 
   ngOnInit() {
     this.filter = new Filter("serverPath-list", {
+    filtreEklenecek
     });
 
     this.cparameters.push("0");
@@ -41,11 +44,14 @@ export class classNameListComponent implements OnInit {
   }
 
   getobjectNameList(){
+  this.spinner.show();
     this.service.getList(this.filter.getServiceString()).subscribe((result)=>{
       this.objectNameList = result;
-      this.changeDetectorRefs.detectChanges();
+      this.cdf.detectChanges();
+      this.spinner.hide();
+      this.help.csList(this.objectNameList);
     },(error)=>{
-      this.showError('Hata','Veriler Yüklenirken Hata Oluştu..');
+      this.help.showError(error);
     });
   }
 
@@ -53,13 +59,8 @@ gotoList(){
   this.getobjectNameList();
 }
 
-showError(baslik: string, hata: string) {
-  this.ms.add({severity: 'error', summary: baslik, detail: hata});
- this.changeDetectorRefs.detectChanges();
-}
 showSuccess(baslik: string, mesaj: string) {
-  this.ms.add({severity: 'success', summary: baslik, detail: mesaj});
- this.changeDetectorRefs.detectChanges();
+ this.help.showToast('success',baslik,mesaj);
 }
 
 
@@ -77,18 +78,35 @@ clear(){
     this.confirmationService.confirm({
       message: 'Silmek istediğinize emin misiniz?',
       accept : ()=>{
-        this.service.delete(id).subscribe(accept => {           
-          // this.router.navigate(['personel/nufus-list']);
+      this.spinner.show();
+        this.service.delete(id).subscribe(accept => {
+        this.showSuccess("BAŞARILI","Kayıt Silindi..");
+           this.router.navigate(['personel/serverPath-list']);
            this.clear();
-          this.showSuccess("BAŞARILI","Kayıt Silindi..");
-           this.changeDetectorRefs.detectChanges();
+
         },error=>{
-            this.showError("HATA","Kayıt Silinemedi..")
+            this.help.showError(error)
         });
       }
     })
  
   }
+
+ headers=[basliklar]
+export(type,filename='objectName-Listesi'){
+  this.spinner.show();
+  this.service.exportData(this.filter.getServiceString()).subscribe((result)=>{
+    const newArray = result.map(o => {
+      return { 
+	exportList
+        };
+    });
+    this.exportService.export(type,newArray,this.headers,filename,newArray);
+    this.spinner.hide();
+  },error=>{this.help.showError(error);})
+  
+}
+
 
 
 
